@@ -1,10 +1,19 @@
 package com.vb.hotelcontrol.models;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @Entity
 @Table(name = "TB_Apartment")
 public class ApartmentModel implements Serializable {
@@ -30,51 +39,4 @@ public class ApartmentModel implements Serializable {
     private String block;
 
 
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
-    public String getApartmentNumber() {
-        return apartmentNumber;
-    }
-
-    public void setApartmentNumber(String apartmentNumber) {
-        this.apartmentNumber = apartmentNumber;
-    }
-
-    public String getApartmentType() {
-        return apartmentType;
-    }
-
-    public void setApartmentType(String apartmentType) {
-        this.apartmentType = apartmentType;
-    }
-
-    public LocalDateTime getRegistrationDate() {
-        return registrationDate;
-    }
-
-    public void setRegistrationDate(LocalDateTime registrationDate) {
-        this.registrationDate = registrationDate;
-    }
-
-    public String getGuestName() {
-        return guestName;
-    }
-
-    public void setGuestName(String guestName) {
-        this.guestName = guestName;
-    }
-
-    public String getBlock() {
-        return block;
-    }
-
-    public void setBlock(String block) {
-        this.block = block;
-    }
 }
