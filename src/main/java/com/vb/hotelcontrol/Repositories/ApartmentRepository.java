@@ -1,4 +1,4 @@
-package com.vb.hotelcontrol.ApartmentRepository;
+package com.vb.hotelcontrol.Repositories;
 
 import com.vb.hotelcontrol.models.ApartmentModel;
 import org.springframework.data.jpa.repository.JpaRepository;
