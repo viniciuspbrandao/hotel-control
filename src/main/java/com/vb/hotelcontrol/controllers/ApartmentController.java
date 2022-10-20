@@ -5,10 +5,7 @@ import com.vb.hotelcontrol.models.ApartmentModel;
 import com.vb.hotelcontrol.services.ApartmentService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +15,6 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/control")
@@ -66,18 +62,22 @@ public class ApartmentController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Object> updateApartment(@PathVariable(value = "id") Long id,
-                                                  @RequestBody @Valid ApartmentDto apartmentDto){
+                                                  @RequestBody @Valid ApartmentDto apartmentDto) {
         Optional<ApartmentModel> apartmentModelOptional = apartmentService.findById(id);
-        if (!apartmentModelOptional.isPresent()){
+        if (!apartmentModelOptional.isPresent()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Apartment not found. Check the ID.");
         }
         var apartmentModel = apartmentModelOptional.get();
         apartmentModel.setApartmentNumber(apartmentDto.getApartmentNumber());
         apartmentModel.setBlock(apartmentDto.getBlock());
         apartmentModel.setApartmentType(apartmentDto.getApartmentType());
+
         apartmentModel.setGuestName(apartmentDto.getGuestName());
+        apartmentModel.setNumberOfAdults(apartmentDto.getNumberOfAdults());
+        apartmentModel.setNumberOfChildren(apartmentDto.getNumberOfChildren());
 
-
+        apartmentModel.setCheckIn(apartmentDto.getCheckIn());
+        apartmentModel.setCheckOut(apartmentDto.getCheckOut());
         return ResponseEntity.status(HttpStatus.OK).body(apartmentService.save(apartmentModel));
     }
 }

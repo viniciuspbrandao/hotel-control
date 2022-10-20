@@ -1,14 +1,12 @@
 package com.vb.hotelcontrol.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
-import java.util.UUID;
+
 
 @Data
 @Getter
@@ -29,4 +27,16 @@ public class ApartmentDto {
 
     @NotBlank
     private String guestName;
+
+    private int numberOfAdults;
+
+    private int numberOfChildren;
+
+    @JsonProperty
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime checkIn;
+
+    @JsonProperty
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime checkOut;
 }

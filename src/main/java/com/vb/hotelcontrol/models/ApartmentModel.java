@@ -1,5 +1,7 @@
 package com.vb.hotelcontrol.models;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -8,7 +10,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.UUID;
+
 
 @Data
 @AllArgsConstructor
@@ -37,6 +39,22 @@ public class ApartmentModel implements Serializable {
 
     @Column(nullable = false, length = 30)
     private String block;
+
+    @Column(nullable = false)
+    private int numberOfAdults;
+
+    @Column(nullable = false)
+    private int numberOfChildren;
+
+    @JsonProperty
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Column
+    private LocalDateTime checkIn;
+
+    @JsonProperty
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Column
+    private LocalDateTime checkOut;
 
 
 }
