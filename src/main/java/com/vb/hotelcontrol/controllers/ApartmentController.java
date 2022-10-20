@@ -5,6 +5,10 @@ import com.vb.hotelcontrol.models.ApartmentModel;
 import com.vb.hotelcontrol.services.ApartmentService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +16,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/control")
@@ -22,34 +29,56 @@ public class ApartmentController {
 
 
     @PostMapping
-    public ResponseEntity<Object> saveApartment(@RequestBody @Valid ApartmentDto apartmentDto){
-            var apartmentModel = new ApartmentModel();
-            BeanUtils.copyProperties(apartmentDto, apartmentModel);
-            apartmentModel.setRegistrationDate(LocalDateTime.now(ZoneId.of("UTC")));
-            return ResponseEntity.status(HttpStatus.CREATED).body(apartmentService.save(apartmentModel));
+    public ResponseEntity<Object> saveApartment(@RequestBody @Valid ApartmentDto apartmentDto) {
 
-//        if(apartmentService.existsByLicensePlateCar(apartmentDto.getLicensePlateCar())){
-//            return ResponseEntity.status(HttpStatus.CONFLICT).body("Conflict: License Plate Car is already in use!");
-//        }
-//        if(apartmentService.existsByParkingSpotNumber(apartmentDto.getParkingSpotNumber())){
-//            return ResponseEntity.status(HttpStatus.CONFLICT).body("Conflict: Parking Spot is already in use!");
-//        }
-//        if(apartmentService.existsByApartmentAndBlock(apartmentDto.getApartment(), apartmentDto.getBlock())){
-//            return ResponseEntity.status(HttpStatus.CONFLICT).body("Conflict: Parking Spot already registered for this apartment/block!");
-//        }
-//        var parkingSpotModel = new ApartmentModel();
-//        BeanUtils.copyProperties(apartmentDto, apartmentModel);
-//        apartmentModel.setRegistrationDate(LocalDateTime.now(ZoneId.of("UTC")));
-//        return ResponseEntity.status(HttpStatus.CREATED).body(apartmentService.save(apartmentModel));
+        var apartmentModel = new ApartmentModel();
+        BeanUtils.copyProperties(apartmentDto, apartmentModel);
+        apartmentModel.setRegistrationDate(LocalDateTime.now(ZoneId.of("UTC")));
+        return ResponseEntity.status(HttpStatus.CREATED).body(apartmentService.save(apartmentModel));
+
+    }
+
+    @GetMapping
+    public ResponseEntity<List<ApartmentModel>> getAllApartments() {
+        return ResponseEntity.status(HttpStatus.OK).body(apartmentService.findAll());
     }
 
 
-
-//    @ResponseStatus(HttpStatus.CREATED)
-//    public ResponseEntity<Object> saveApartment(@RequestBody ApartmentModel apartmentModel){
-//        return ResponseEntity.status(HttpStatus.CREATED).body(ApartmentService.save(apartmentModel));
-
-//    public ApartmentModel save(@RequestBody ApartmentModel apartmentModel) {
-//        return ApartmentService.save(apartmentModel);
+    @GetMapping("/{id}")
+    public ResponseEntity<Object> getById(@PathVariable(value = "id") Long id) {
+        Optional<ApartmentModel> apartmentModelOptional = apartmentService.findById(id);
+        if (!apartmentModelOptional.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Apartment not found. Check the ID.");
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(apartmentModelOptional.get());
     }
+
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Object> deleteApartment(@PathVariable(value = "id") Long id) {
+        Optional<ApartmentModel> apartmentModelOptional = apartmentService.findById(id);
+        if (!apartmentModelOptional.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Apartment not found. Check the ID.");
+        }
+        apartmentService.delete(apartmentModelOptional.get());
+        return ResponseEntity.status(HttpStatus.OK).body("Successfully deleted.");
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Object> updateApartment(@PathVariable(value = "id") Long id,
+                                                  @RequestBody @Valid ApartmentDto apartmentDto){
+        Optional<ApartmentModel> apartmentModelOptional = apartmentService.findById(id);
+        if (!apartmentModelOptional.isPresent()){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Apartment not found. Check the ID.");
+        }
+        var apartmentModel = apartmentModelOptional.get();
+        apartmentModel.setApartmentNumber(apartmentDto.getApartmentNumber());
+        apartmentModel.setBlock(apartmentDto.getBlock());
+        apartmentModel.setApartmentType(apartmentDto.getApartmentType());
+        apartmentModel.setGuestName(apartmentDto.getGuestName());
+
+
+        return ResponseEntity.status(HttpStatus.OK).body(apartmentService.save(apartmentModel));
+    }
+}
 

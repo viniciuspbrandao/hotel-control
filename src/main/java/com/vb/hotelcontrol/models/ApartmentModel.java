@@ -21,7 +21,7 @@ public class ApartmentModel implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private UUID id;
+    private Long id;
 
     @Column(nullable = false, unique = true, length = 10)
     private String apartmentNumber;
