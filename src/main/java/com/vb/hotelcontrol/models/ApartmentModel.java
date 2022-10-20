@@ -25,19 +25,19 @@ public class ApartmentModel implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(nullable = false, unique = true, length = 10)
+    @Column(nullable = false, unique = true, length = 5)
     private String apartmentNumber;
 
-    @Column(nullable = false, length = 70)
+    @Column(nullable = false)
     private String apartmentType;
 
     @Column(nullable = false)
     private LocalDateTime registrationDate;
 
-    @Column(nullable = false, length = 130)
+    @Column(nullable = false)
     private String guestName;
 
-    @Column(nullable = false, length = 30)
+    @Column(nullable = false)
     private String block;
 
     @Column(nullable = false)
